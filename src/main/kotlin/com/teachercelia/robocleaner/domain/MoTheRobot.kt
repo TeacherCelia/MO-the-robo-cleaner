@@ -1,13 +1,13 @@
 package com.teachercelia.robocleaner.domain
 
 class MoTheRobot(
-    val position: Position,
-    val orientation: Orientation
+    var position: Position,
+    var orientation: Orientation
 )
 {
 
-    fun turnRight(robotActualOrientation: Orientation): Orientation{
-        return when(robotActualOrientation){
+    fun turnRight() {
+        orientation = when(orientation){
             Orientation.N -> Orientation.E
             Orientation.E -> Orientation.S
             Orientation.S -> Orientation.W
@@ -15,8 +15,8 @@ class MoTheRobot(
         }
     }
 
-    fun turnLeft(robotActualOrientation: Orientation): Orientation{
-        return when(robotActualOrientation){
+    fun turnLeft() {
+        orientation = when(orientation){
             Orientation.N -> Orientation.W
             Orientation.W -> Orientation.S
             Orientation.S -> Orientation.E
@@ -28,13 +28,14 @@ class MoTheRobot(
     * TODO: Rule that Robot position (X,Y) can never be higher than Workspace xMax, yMax or less than 0
     */
 
-    fun move(robotActualOrientation: Orientation, robotActualPosition: Position): Position {
-        return when(robotActualOrientation){
-            Orientation.N -> Position(robotActualPosition.x,robotActualPosition.y + 1)
-            Orientation.E -> Position(robotActualPosition.x + 1, robotActualPosition.y)
-            Orientation.S -> Position(robotActualPosition.x, robotActualPosition.y - 1)
-            Orientation.W -> Position(robotActualPosition.x - 1, robotActualPosition.y)
+    fun move(): Position {
+        position = when(orientation){
+            Orientation.N -> Position(position.x,position.y + 1)
+            Orientation.E -> Position(position.x + 1, position.y)
+            Orientation.S -> Position(position.x, position.y - 1)
+            Orientation.W -> Position(position.x - 1, position.y)
         }
+        return position
     }
 
 }

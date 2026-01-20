@@ -18,4 +18,11 @@ fun main(){
     val myWorkspace = Workspace(-2, 4)
     println(myWorkspace)
      */
+
+    // First movement test!
+    myFirstRobot.turnRight()
+    myFirstRobot.turnRight()
+    myFirstRobot.move()
+    myFirstRobot.move()
+    println("Now I'm in ${myFirstRobot.position} coordinates and looking to ${myFirstRobot.orientation}")
 }
