@@ -11,6 +11,11 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    // versions
+    val kotlinArrowCore = "2.1.2"
+
+    // implementations
+    implementation("io.arrow-kt:arrow-core:${kotlinArrowCore}")
 }
 
 tasks.test {
