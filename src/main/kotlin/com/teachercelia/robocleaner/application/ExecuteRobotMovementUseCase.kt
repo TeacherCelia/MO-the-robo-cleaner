@@ -31,6 +31,7 @@ class ExecuteRobotMovementUseCase(
                     'L' -> robot.turnLeft()
                     'R' -> robot.turnRight()
                     'M' -> robot.move()
+                    else -> throw IllegalArgumentException("Invalid instruction, only L, R or M allowed.")
                 }
             }
 

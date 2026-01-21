@@ -1,7 +1,6 @@
 package com.teachercelia.robocleaner
 
 import com.teachercelia.robocleaner.application.ExecuteRobotMovementUseCase
-import com.teachercelia.robocleaner.domain.Instruction
 
 fun main(){
     // I will be using main for testing!
