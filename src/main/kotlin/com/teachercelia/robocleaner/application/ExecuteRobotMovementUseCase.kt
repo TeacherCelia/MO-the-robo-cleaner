@@ -1,7 +1,6 @@
 package com.teachercelia.robocleaner.application
 
 import com.teachercelia.robocleaner.domain.MoTheRobot
-import com.teachercelia.robocleaner.domain.Instruction
 import com.teachercelia.robocleaner.domain.Orientation
 import com.teachercelia.robocleaner.domain.Position
 
@@ -9,18 +8,36 @@ class ExecuteRobotMovementUseCase(
 ){
     fun executeRobotMovement(
         //workspace: Workspace,
-        robotInstructions: List<Instruction>
-    ): MoTheRobot {
-        val robot = MoTheRobot(Position(0,0),Orientation.N)
+        lines: List<String>
+    ): List<MoTheRobot> {
+        val robots = mutableListOf<MoTheRobot>()
+        var i = 0
 
-        for (i in robotInstructions){
+        while (i < lines.size) {
+            val positionLine = lines[i]
+            val instructionLine = lines[i + 1]
 
-            when(i){
-                Instruction.L -> robot.turnLeft()
-                Instruction.R -> robot.turnRight()
-                Instruction.M -> robot.move()
+            // -- positionLine (robot) --
+            val parts = positionLine.split(" ")
+            val x = parts[0].toInt()
+            val y = parts[1].toInt()
+            val orientation = Orientation.valueOf(parts[2])
+
+            val robot = MoTheRobot(Position(x, y), orientation)
+
+            // -- instructionsLine --
+            for (c in instructionLine) {
+                when (c) {
+                    'L' -> robot.turnLeft()
+                    'R' -> robot.turnRight()
+                    'M' -> robot.move()
+                }
             }
+
+            robots.add(robot)
+            i += 2
         }
-        return robot
+        return robots
     }
+
 }
