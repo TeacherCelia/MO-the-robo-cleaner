@@ -1,28 +1,19 @@
 package com.teachercelia.robocleaner
 
-import com.teachercelia.robocleaner.domain.MoTheRobot
-import com.teachercelia.robocleaner.domain.Orientation
-import com.teachercelia.robocleaner.domain.Position
-import com.teachercelia.robocleaner.domain.Workspace
+import com.teachercelia.robocleaner.application.ExecuteRobotMovementUseCase
+import java.io.File
 
 fun main(){
     // I will be using main for testing!
 
-    // Initiating my first robot:
+    // testing input from input.txt
+    val input = File("input.txt").readText()
 
-    val myFirstRobot = MoTheRobot(Position(3,4), Orientation.E)
+    val useCase = ExecuteRobotMovementUseCase()
+    val robots = useCase.executeRobotMovement(input)
 
-    println("The first robot is in position ${myFirstRobot.position.x},${myFirstRobot.position.y} and is looking at ${myFirstRobot.orientation}")
+    robots.forEach { robot ->
+        println("${robot.position.x} ${robot.position.y} ${robot.orientation}")
+    }
 
-    /* This throws an exception due to the Workspace 'init', I will decide if I keep this validation this way or not...
-    val myWorkspace = Workspace(-2, 4)
-    println(myWorkspace)
-     */
-
-    // First movement test!
-    myFirstRobot.turnRight()
-    myFirstRobot.turnRight()
-    myFirstRobot.move()
-    myFirstRobot.move()
-    println("Now I'm in ${myFirstRobot.position} coordinates and looking to ${myFirstRobot.orientation}")
 }
