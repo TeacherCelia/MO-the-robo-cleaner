@@ -1,5 +1,6 @@
 package com.teachercelia.robocleaner.application
 
+import com.teachercelia.robocleaner.domain.Instruction
 import com.teachercelia.robocleaner.domain.MoTheRobot
 import com.teachercelia.robocleaner.domain.Orientation
 import com.teachercelia.robocleaner.domain.Position
@@ -8,50 +9,37 @@ import com.teachercelia.robocleaner.domain.Workspace
 class ExecuteRobotMovementUseCase(
 ){
     fun executeRobotMovement(
-        input: String
+        command: RobotInputCommand
     ): List<MoTheRobot>{
-        val lines = input
-            .lines()
-            .map { it.trim() }
-
-        val workspaceLine = lines.getOrNull(0)
-            ?: throw IllegalArgumentException("Empty input")
-
-        val workspaceParts = workspaceLine.split(Regex(" "))
-        val xMax = workspaceParts[0].toInt()
-        val yMax = workspaceParts[1].toInt()
-        val workspace = Workspace(xMax, yMax)
-
+        // Steps 3, 4, 5
         val robots = mutableListOf<MoTheRobot>()
-        val robotLines = lines.drop(1)
 
-        val pairs = robotLines.chunked(2)
+        for (program in command.programs) {
+            val robot = MoTheRobot(program.start, program.orientation)
 
-        for (pair in pairs) {
-            val positionLine = pair.getOrNull(0) ?: continue
-            val instructionLine = pair.getOrNull(1) ?: ""
-
-            val parts = positionLine.split(Regex(" "))
-            val x = parts[0].toInt()
-            val y = parts[1].toInt()
-            val orientation = Orientation.valueOf(parts[2])
-
-            val robot = MoTheRobot(Position(x, y), orientation)
-
-            for (c in instructionLine) {
-                when (c) {
-                    'L' -> robot.turnLeft()
-                    'R' -> robot.turnRight()
-                    'M' -> robot.move()
-                    else -> Unit
+            for (i in program.instructions){
+                when (i){
+                    Instruction.L -> robot.turnLeft()
+                    Instruction.R -> robot.turnRight()
+                    Instruction.M -> robot.move()
                 }
             }
 
             robots.add(robot)
         }
-
         return robots
 
     }
 
 }
+
+data class RobotProgram(
+    val start: Position,
+    val orientation: Orientation,
+    val instructions: List<Instruction>
+)
+
+data class RobotInputCommand(
+    val workspace: Workspace,
+    val programs: List<RobotProgram>
+)
