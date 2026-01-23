@@ -1,6 +1,7 @@
 package com.teachercelia.robocleaner
 
 import com.teachercelia.robocleaner.application.ExecuteRobotMovementUseCase
+import com.teachercelia.robocleaner.infrastructure.ParseError
 import com.teachercelia.robocleaner.infrastructure.RobotInputParser
 import java.io.File
 
@@ -14,13 +15,24 @@ fun main(){
     val input = File("input.txt").readText()
 
     val parser = RobotInputParser()
-    val command = parser.parse(input)
-
     val useCase = ExecuteRobotMovementUseCase()
-    val robots = useCase.executeRobotMovement(command)
 
-    robots.forEach { robot ->
-        println("${robot.position.x} ${robot.position.y} ${robot.orientation}")
-    }
+    parser.parse(input).fold(
+        ifLeft = { error ->
+            val message = when (error) {
+                is ParseError.EmptyInput -> error.message
+                is ParseError.InvalidWorkspace -> error.message
+                is ParseError.InvalidRobot -> error.message
+            }
+            println("ERROR: $message")
+        },
+        ifRight = { command ->
+            val robots = useCase.executeRobotMovement(command)
+
+            robots.forEach { robot ->
+                println("${robot.position.x} ${robot.position.y} ${robot.orientation}")
+            }
+        }
+    )
 
 }
